@@ -73,7 +73,7 @@ if (doctorCount.count === 0) {
   db.prepare(`
     INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
     VALUES (?, ?, ?, ?)
-  `).run('Dupont', 'Jean', 'MD-001', 'Médecine générale');
+  `).run('Dupont', 'Jean', 'DOC-1001', 'Médecine générale');
 
   db.prepare(`
     INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
