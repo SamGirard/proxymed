@@ -70,7 +70,7 @@ db.prepare('DELETE FROM Doctor').run();
 db.prepare(`
   INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
   VALUES (?, ?, ?, ?)
-`).run('Fomkoung', 'Michael', 'doc-1001', 'Médecine générale');
+`).run('Fomkoung', 'Michael', 'DOC-1001', 'Médecine générale');
 
 console.log('✅ Base de données prête :', DB_PATH);
 
