@@ -73,14 +73,9 @@ if (doctorCount.count === 0) {
   db.prepare(`
     INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
     VALUES (?, ?, ?, ?)
-  `).run('Dupont', 'Jean', 'DOC-1001', 'Médecine générale');
+  `).run('Fomkoung', 'Michael', 'doc-1001', 'Médecine générale');
 
-  db.prepare(`
-    INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
-    VALUES (?, ?, ?, ?)
-  `).run('Martin', 'Sophie', 'MD-002', 'Cardiologie');
-
-  console.log('✅ Médecins par défaut créés (MD-001, MD-002)');
+  console.log('✅ Médecins crée doc-1001');
 }
 
 console.log('✅ Base de données prête :', DB_PATH);
