@@ -65,18 +65,12 @@ db.exec(`
 
 // ─── Données de test par défaut ─────────────────────────────────────────────
 
-const bcrypt = require('bcryptjs');
+db.prepare('DELETE FROM Doctor').run();
 
-// Médecin par défaut
-const doctorCount = db.prepare('SELECT COUNT(*) as count FROM Doctor').get();
-if (doctorCount.count === 0) {
-  db.prepare(`
-    INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
-    VALUES (?, ?, ?, ?)
-  `).run('Fomkoung', 'Michael', 'doc-1001', 'Médecine générale');
-
-  console.log('✅ Médecins crée doc-1001');
-}
+db.prepare(`
+  INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
+  VALUES (?, ?, ?, ?)
+`).run('Fomkoung', 'Michael', 'doc-1001', 'Médecine générale');
 
 console.log('✅ Base de données prête :', DB_PATH);
 
