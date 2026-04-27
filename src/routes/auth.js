@@ -96,4 +96,21 @@ router.post('/reset-password', (req, res) => {
   res.json({ message: 'Mot de passe mis à jour' });
 });
 
+// ─── PUT /api/auth/nurse/:id ──────────────────────────────────────────────────
+router.put('/nurse/:id', (req, res) => {
+  const { nom, prenom, adresse, email, telephone } = req.body;
+
+  const existing = db.prepare('SELECT id FROM Nurse WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'Infirmier introuvable' });
+
+  db.prepare(`
+    UPDATE Nurse SET nom = ?, prenom = ?, adresse = ?, email = ?, telephone = ?
+    WHERE id = ?
+  `).run(nom, prenom, adresse, email, telephone, req.params.id);
+
+  const nurse = db.prepare('SELECT id, nom, prenom, adresse, email, telephone FROM Nurse WHERE id = ?')
+    .get(req.params.id);
+  res.json(nurse);
+});
+
 module.exports = router;
