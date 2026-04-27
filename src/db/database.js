@@ -72,6 +72,16 @@ db.prepare(`
   VALUES (?, ?, ?, ?)
 `).run('Fomkoung', 'Michael', 'DOC-1001', 'Médecine générale');
 
+db.prepare(`
+  INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
+  VALUES (?, ?, ?, ?)
+`).run('Girad', 'Samuel', 'DOC-2002', 'Cardiologie');
+
+db.prepare(`
+  INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
+  VALUES (?, ?, ?, ?)
+`).run('Kouki', 'Rayan', 'DOC-3003', 'Dermatologie');
+
 console.log('✅ Base de données prête :', DB_PATH);
 
 module.exports = db;
