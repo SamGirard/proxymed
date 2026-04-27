@@ -15,4 +15,20 @@ router.get('/:id', (req, res) => {
   res.json(doctor);
 });
 
+
+// ─── PUT /api/doctors/:id ─────────────────────────────────────────────────────
+router.put('/:id', (req, res) => {
+  const { nom, prenom, specialite } = req.body;
+
+  const existing = db.prepare('SELECT id FROM Doctor WHERE id = ?').get(req.params.id);
+  if (!existing) return res.status(404).json({ error: 'Médecin introuvable' });
+
+  db.prepare(`
+    UPDATE Doctor SET nom = ?, prenom = ?, specialite = ?
+    WHERE id = ?
+  `).run(nom, prenom, specialite, req.params.id);
+
+  const doctor = db.prepare('SELECT * FROM Doctor WHERE id = ?').get(req.params.id);
+  res.json(doctor);
+});
 module.exports = router;
