@@ -113,4 +113,9 @@ router.put('/nurse/:id', (req, res) => {
   res.json(nurse);
 });
 
+router.get('/nurses', (req, res) => {
+  const nurses = db.prepare('SELECT id, nom, prenom, adresse, email, telephone FROM Nurse').all();
+  res.json(nurses);
+});
+
 module.exports = router;
