@@ -21,7 +21,7 @@ async function notifyNurse(nurseId, title, body, data = {}) {
       data: { title, body, ...data },
       android: { priority: 'high' }
     });
-    console.log(`📨 Push envoyé à nurse_${nurseId} (${messageId})`);
+    console.log(`Notif envoyé à nurse_${nurseId} (${messageId})`);
   } catch (err) {
     console.error('Échec de envoi FCM:', err.message);
   }
