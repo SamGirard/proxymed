@@ -1,6 +1,7 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../db/database');
+const { notifyNurse } = require('../fcm');
 
 // ─── GET /api/visits ─────────────────────────────────────────────────────────
 // Toutes les visites (médecin et infirmier)
@@ -126,16 +127,31 @@ router.put('/:id/note', (req, res) => {
   db.prepare('UPDATE Visit SET doctorNote = ? WHERE id = ?').run(doctorNote, req.params.id);
 
   const visit = db.prepare('SELECT * FROM Visit WHERE id = ?').get(req.params.id);
+  if (doctorNote && doctorNote.trim() !== '') {
+    notifyNurse(
+      visit.nurseId,
+      'Visite traitée',
+      `Le médecin a ajouté une note à la visite de ${visit.patientName || 'un patient'}`,
+      { visitId: String(visit.id), type: 'note' }
+    );
+  }
   res.json({ message: 'Note ajoutée', visit });
 });
 
 // ─── PUT /api/visits/:id/archive ─────────────────────────────────────────────
 // Médecin archive une visite
 router.put('/:id/archive', (req, res) => {
-  const existing = db.prepare('SELECT id FROM Visit WHERE id = ?').get(req.params.id);
+  const existing = db.prepare('SELECT * FROM Visit WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'Visite introuvable' });
 
   db.prepare('UPDATE Visit SET archived = 1 WHERE id = ?').run(req.params.id);
+
+  notifyNurse(
+    existing.nurseId,
+    'Visite traitée',
+    `La visite de ${existing.patientName || 'un patient'} a été archivée par le médecin`,
+    { visitId: String(existing.id), type: 'archive' }
+  );
 
   res.json({ message: 'Visite archivée' });
 });

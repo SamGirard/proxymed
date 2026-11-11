@@ -66,21 +66,16 @@ db.exec(`
 // ─── Données de test par défaut ─────────────────────────────────────────────
 
 db.prepare('DELETE FROM Doctor').run();
+db.prepare("DELETE FROM sqlite_sequence WHERE name = 'Doctor'").run();
 
-db.prepare(`
+const insertDoctor = db.prepare(`
   INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
   VALUES (?, ?, ?, ?)
-`).run('Fomkoung', 'Michael', 'DOC-1001', 'Médecine générale');
+`);
 
-db.prepare(`
-  INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
-  VALUES (?, ?, ?, ?)
-`).run('Girad', 'Samuel', 'DOC-2002', 'Cardiologie');
-
-db.prepare(`
-  INSERT INTO Doctor (nom, prenom, numeroPraticien, specialite)
-  VALUES (?, ?, ?, ?)
-`).run('Kouki', 'Rayan', 'DOC-3003', 'Dermatologie');
+insertDoctor.run('Fomkoung', 'Michael', 'DOC-1001', 'Médecine générale');
+insertDoctor.run('Girad', 'Samuel', 'DOC-2002', 'Cardiologie');
+insertDoctor.run('Kouki', 'Rayan', 'DOC-3003', 'Dermatologie');
 
 console.log('✅ Base de données prête :', DB_PATH);
 
