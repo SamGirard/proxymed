@@ -1,5 +1,4 @@
 node_modules/
-serviceAccountKey.json
 proxymed.db
 proxymed.db-shm
 proxymed.db-wal
