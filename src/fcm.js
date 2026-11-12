@@ -4,12 +4,14 @@ const path  = require('path');
 let enabled = false;
 
 try {
-  const key = require(path.join(__dirname, '../serviceAccountKey.json'));
+  const key = process.env.FIREBASE_SERVICE_ACCOUNT
+    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+    : require(path.join(__dirname, '../serviceAccountKey.json'));
   admin.initializeApp({ credential: admin.credential.cert(key) });
   enabled = true;
   console.log('FCM activé i guess');
 } catch (e) {
-  console.warn('FCM désactivé :', e.message);
+  console.warn('FCM désactivé:', e.message);
 }
 
 async function notifyNurse(nurseId, title, body, data = {}) {

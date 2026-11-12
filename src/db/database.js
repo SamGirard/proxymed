@@ -1,7 +1,9 @@
+const bcrypt = require('bcryptjs');
+
 const Database = require('better-sqlite3');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '../../proxymed.db');
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../../proxymed.db');
 
 const db = new Database(DB_PATH);
 
@@ -77,6 +79,36 @@ insertDoctor.run('Fomkoung', 'Michael', 'DOC-1001', 'Médecine générale');
 insertDoctor.run('Girad', 'Samuel', 'DOC-2002', 'Cardiologie');
 insertDoctor.run('Kouki', 'Rayan', 'DOC-3003', 'Dermatologie');
 
-console.log('✅ Base de données prête :', DB_PATH);
+if (db.prepare('SELECT COUNT(*) AS c FROM Nurse').get().c === 0) {
+  db.prepare(`
+    INSERT INTO Nurse (nom, prenom, adresse, email, telephone, password)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run('Girard', 'Samuel', 'Trois-Rivières', 'samuel@test.com', '819-000-0000',
+         bcrypt.hashSync('password', 10));
+
+ db.prepare(`
+     INSERT INTO Nurse (nom, prenom, adresse, email, telephone, password)
+     VALUES (?, ?, ?, ?, ?, ?)
+   `).run('Toure', 'Fadel', 'Trois-Rivières', 'fadel@test.com', '818-000-0000',
+          bcrypt.hashSync('password', 10));
+
+   db.prepare(`
+       INSERT INTO Nurse (nom, prenom, adresse, email, telephone, password)
+       VALUES (?, ?, ?, ?, ?, ?)
+     `).run('Kouki', 'Rayan', 'Trois-Rivières', 'rayan@test.com', '817-000-0000',
+            bcrypt.hashSync('password', 10));
+
+  db.prepare(`
+    INSERT INTO Visit (patientName, nurseId, date, pression, glycemia, weight,
+                       respRate, heartRate, spo2, generalState, extraNotes,
+                       latitude, longitude, address, archived)
+    VALUES (?, 1, ?, 120, 5.4, 75.5, 16, 72, 98, ?, ?, 46.3432, -72.5453, ?, 0)
+  `).run('Jean Tremblay', '2026-04-25', 'Patient stable',
+         'Aucun problème particulier', '123 rue des érables, Trois-Rivières');
+
+  console.log('Compte : samuel@test.com / password' + '\nCompte : fadel@test.com / password' + '\nCompte : rayan@test.com / password');
+}
+
+console.log('Base de données prête :', DB_PATH);
 
 module.exports = db;
